@@ -83,12 +83,18 @@ def generate_flashcards():
             if "-" not in line:
                 continue
 
-            german, english = map(str.strip, line.strip().split("-", 1))
+            germanEntry, english = map(str.strip, line.strip().split("-", 1))
+            german = ''
+            if germanEntry.find('+') >= 0:
+                german = germanEntry.split(' + ')[0]
+            else:
+                german = germanEntry
+            
             logging.info(f"Looking up '{german}'")
 
             info = lookup_word(german)
             if info:
-                front = f"<strong>{german}</strong> <br><br> <span style='font-size:75%'>{info['headword']} ({info['part_of_speech']}) {html_list(info['sources'])}</span>"
+                front = f"<strong>{germanEntry.replace(' + ', ', ')}</strong> <br><br> <span style='font-size:75%'>{info['headword']} ({info['part_of_speech']}) {html_list(info['sources'])}</span>"
 
                 back = english + "<br><br> <span style='font-size:75%'>" + "Automated translations:" + html_list(info['translations']) + "</span>"
 
